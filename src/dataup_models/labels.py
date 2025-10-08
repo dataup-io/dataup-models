@@ -40,3 +40,18 @@ class Label(BaseModel, frozen=True):
             if attr.key == key:
                 return attr
         return None
+
+    @classmethod
+    def from_rbf(cls, rbf_pred: dict) -> "Label":
+        points = [(int(p["x"]), int(p["y"])) for p in rbf_pred.get("points", [])]
+        return cls(
+            label=rbf_pred["class"],
+            score=rbf_pred["confidence"],
+            bbox=BoundingBox(
+                x=int(rbf_pred["x"] - rbf_pred["width"] / 2),
+                y=int(rbf_pred["y"] - rbf_pred["height"] / 2),
+                width=int(rbf_pred["width"]),
+                height=int(rbf_pred["height"]),
+            ),
+            polygon=Polygon(points=points) if points else None,
+        )
