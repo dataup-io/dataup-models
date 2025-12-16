@@ -13,6 +13,7 @@ class DetectorParams(BaseModel):
     max_detections: int = Field(
         description="Max detections per image", ge=1, le=1000, default=100
     )
+    prompt: str | None = None
 
 
 class SAMParams(BaseModel):
