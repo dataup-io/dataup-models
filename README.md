@@ -18,7 +18,6 @@ DataUp Models serves as the **official data contract** for integrating with cvat
 - 🎯 **Type-safe models** for ML inference requests and responses
 - 📦 **Geometric primitives** for bounding boxes and polygons
 - 🏷️ **Label management** with attributes and metadata
-- 🔄 **Multi-format support** for different ML frameworks (Roboflow, Hugging Face, etc.)
 - ✅ **Pydantic validation** ensuring data integrity
 - 🧊 **Immutable models** for thread-safe operations
 - 🔌 **cvat-dataup integration** ready out of the box
@@ -275,23 +274,22 @@ class DetectionResults(BaseModel):
     labels: list[Label]
 ```
 
-**Class Methods:**
-- `from_rbf(image_id: str, rbf_preds: list[dict]) -> DetectionResults`: Create from Roboflow predictions
-
 **Example:**
 ```python
-# From Roboflow format
-rbf_predictions = [
-    {
-        "class": "person",
-        "confidence": 0.95,
-        "x": 100,
-        "y": 150,
-        "width": 80,
-        "height": 200
-    }
-]
-results = DetectionResults.from_rbf("img-001", rbf_predictions)
+from dataup_models.ml import DetectionResults
+from dataup_models.labels import Label
+from dataup_models.geom import BoundingBox
+
+results = DetectionResults(
+    image_id="img-001",
+    labels=[
+        Label(
+            label="person",
+            score=0.95,
+            bbox=BoundingBox(x=10, y=20, width=80, height=200)
+        )
+    ]
+)
 ```
 
 ### Request/Response Models (`requests.py`)
@@ -360,27 +358,6 @@ request2 = InferenceRequest(
     image_urls=["https://example.com/image.jpg"],
     params=SAM3Params(text_prompt="a red car")
 )
-```
-
-### Converting Between Formats
-
-```python
-from dataup_models.ml import DetectionResults
-
-# Convert from Roboflow format
-rbf_data = [
-    {
-        "class": "dog",
-        "confidence": 0.88,
-        "x": 200,
-        "y": 300,
-        "width": 150,
-        "height": 200,
-        "points": [{"x": 200, "y": 300}, {"x": 350, "y": 500}]
-    }
-]
-
-results = DetectionResults.from_rbf("img-001", rbf_data)
 ```
 
 ### Immutable Models

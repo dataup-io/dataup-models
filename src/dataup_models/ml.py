@@ -20,8 +20,3 @@ class SAM3Params(BaseModel):
 class DetectionResults(BaseModel):
     image_id: str = Field(description="Image ID")
     labels: list[Label] = Field(description="List of detected labels")
-
-    @classmethod
-    def from_rbf(cls, image_id: str, rbf_preds: list[dict]) -> "DetectionResults":
-        labels = [Label.from_rbf(pred) for pred in rbf_preds]
-        return cls(image_id=image_id, labels=labels)
