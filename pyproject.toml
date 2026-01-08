@@ -1,3 +1,9 @@
+[build-system]
+requires = ["uv_build>=0.9.2,<0.10.0"]
+build-backend = "uv_build"
+
+
+
 [project]
 name = "dataup-models"
 version = "0.1.0"
@@ -5,7 +11,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "pydantic>=2.11.9",
+    "pydantic>=2.10.6",
     "pytest>=8.4.2",
 ]
 
@@ -13,3 +19,9 @@ dependencies = [
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dataup_models"]
+
+[tool.ruff]
+line-length = 150
